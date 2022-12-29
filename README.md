@@ -1,2 +1,4 @@
 # FPMikro
-Final Project Mikrokontroller Kelompok 3
+Final Project Mikrokontroller Informatika 02
+Kelompok 3
+Aquarium Temperature Sensors
