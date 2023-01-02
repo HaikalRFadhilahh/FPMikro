@@ -6,6 +6,7 @@
 #include <DallasTemperature.h>
 #include <LiquidCrystal_I2C.h>
 #include <OneWire.h>
+#include "ThingSpeak.h"
 
 //Blynk Widget
 BlynkTimer timer;
@@ -18,6 +19,15 @@ char pass[] = "M4m4~Bun94";
 //DS18B20 Sensors Library Configuration
 OneWire onewire(D4);
 DallasTemperature sensors(&onewire);
+
+//ThingSpeak Variable
+WiFiClient client;
+unsigned long idthingspeak = 1998202;
+const char *apikey = "VFFOZ6YQKNO5JW61";
+int interval = 10000;
+unsigned long thingspeakmillis; 
+unsigned long lastmillis;
+
 
 //Global Variable
 int value  = 0;
@@ -61,6 +71,15 @@ void notif()
 void setup()
 {
   Serial.begin(9600); //Start Serial Monitor Nodemcu
+  WiFi.begin(ssid,pass);
+  WiFi.mode(WIFI_STA);
+  Serial.print("Connecting  ");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    Serial.print(".");
+    delay(200);
+  }
+  ThingSpeak.begin(client);
   Blynk.begin(auth,ssid,pass,"iot.amikom.ac.id",8080); //Setup Blynk Paramaters(auth Code,SSID Wifi,PASS Wifi,Server name,Port Internet)
   sensors.begin(); //Starting Aquarium Temperature
   lcd.init(); //Setup LCD
@@ -72,6 +91,7 @@ void setup()
 //Main Function Arduino
 void loop()
 {
+  thingspeakmillis = millis();
   sensors.requestTemperatures();
   value = sensors.getTempCByIndex(0);
   if (value != lastvalue)
@@ -98,5 +118,15 @@ void loop()
   }
   Blynk.run();
   timer.run();
+  //ThingSpeak Millis
+  if (thingspeakmillis - lastmillis >= interval)
+  {
+    int flag = ThingSpeak.writeField(idthingspeak,1,value,apikey);
+    if (flag != 200)
+    {
+      Serial.println("Failed Send Request To ThingSpeak API!!!");
+    }
+    lastmillis = thingspeakmillis;
+  }
   lastvalue = value;
 }
