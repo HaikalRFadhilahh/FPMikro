@@ -13,8 +13,8 @@ BlynkTimer timer;
 
 //Setting For Blynk
 char auth[] = "FrtKe1eSgr6AdP4H_Pi4EFc6kZOSUgb9";
-char ssid[] = "Papa~Jamur";
-char pass[] = "M4m4~Bun94";
+char ssid[] = "Hammer Atas";
+char pass[] = "hammer5678";
 
 //DS18B20 Sensors Library Configuration
 OneWire onewire(D4);
@@ -34,6 +34,7 @@ int value  = 0;
 int lastvalue = 0;
 int blynkvalue = 28;
 int blynknotify = 0;
+#define pinrelay D6
 
 //LCD Configuration Library
 LiquidCrystal_I2C lcd(0x27,16,2); //Declaration LCD I2C Library Paramaters (Address,Column,Row)
@@ -46,6 +47,7 @@ BLYNK_READ(V0)
   blynkvalue = sensors.getTempCByIndex(0); //Insert Data Temperature To Variable Blynk
   Blynk.virtualWrite(V0,blynkvalue); //Send Data Temperature To Gauge Blynk
 }
+
 
 void notif()
 {
@@ -71,6 +73,7 @@ void notif()
 void setup()
 {
   Serial.begin(9600); //Start Serial Monitor Nodemcu
+  Serial.println("Success Upload!!");
   WiFi.begin(ssid,pass);
   WiFi.mode(WIFI_STA);
   Serial.print("Connecting  ");
@@ -86,6 +89,7 @@ void setup()
   lcd.backlight(); //Setup LCD
   lcd.clear(); //Setup LCD
   timer.setInterval(10000L,notif);  //Setting Interval Function For Blynk Notification
+  pinMode(pinrelay,OUTPUT);
 }
  
 //Main Function Arduino
@@ -103,15 +107,18 @@ void loop()
     lcd.print(" °C");
     if (value > 32)
     {
+      digitalWrite(pinrelay,HIGH);
       lcd.setCursor(0,1);
       lcd.print("Suhu Air Panas");
     }
     else if(value >= 25)
     {
+      digitalWrite(pinrelay,LOW);
       lcd.setCursor(0,1);
       lcd.print("Suhu Air Normal");
     }
     else {
+      digitalWrite(pinrelay,LOW);
       lcd.setCursor(0,1);
       lcd.print("Suhu Air Dingin");
     }
