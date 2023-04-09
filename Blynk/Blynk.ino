@@ -12,9 +12,9 @@
 BlynkTimer timer;
 
 //Setting For Blynk
-char auth[] = "FrtKe1eSgr6AdP4H_Pi4EFc6kZOSUgb9";
-char ssid[] = "Hammer Atas";
-char pass[] = "hammer5678";
+char auth[] = "";
+char ssid[] = "";
+char pass[] = "";
 
 //DS18B20 Sensors Library Configuration
 OneWire onewire(D4);
@@ -22,8 +22,8 @@ DallasTemperature sensors(&onewire);
 
 //ThingSpeak Variable
 WiFiClient client;
-unsigned long idthingspeak = 1998202;
-const char *apikey = "VFFOZ6YQKNO5JW61";
+unsigned long idthingspeak = ;
+const char *apikey = "";
 int interval = 10000;
 unsigned long thingspeakmillis; 
 unsigned long lastmillis;
