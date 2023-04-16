@@ -5,4 +5,4 @@ Nomer Kelompok : Kelompok 3
 
 =======================================================
 
-By Only Haikal Raditya Fadhilah
+By Haikal Raditya Fadhilah
